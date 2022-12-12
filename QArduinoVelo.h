@@ -33,13 +33,13 @@ public:
 
 protected:
    QSerialPort* SerialPort = nullptr;
-   bool bConnected = false;
    QByteArray ReceivedData;
 
 public:
     explicit QArduinoVelo(QObject *parent = nullptr);
 
    Q_INVOKABLE void tryConnect();
+   Q_INVOKABLE bool isConnected();
 
 signals:
     void ArduinoInfoChanged();

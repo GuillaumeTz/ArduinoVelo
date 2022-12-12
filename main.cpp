@@ -1,11 +1,11 @@
-#include <QGuiApplication>
+#include <QApplication >
 #include <QQmlApplicationEngine>
 
 #include "QArduinoVelo.h"
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
 
     QArduinoVelo* ArduinoVelo = new QArduinoVelo(&app);
 

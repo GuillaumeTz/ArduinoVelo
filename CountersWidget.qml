@@ -1,4 +1,6 @@
 import QtQuick
+import QtQuick.Controls
+import QtCharts
 
 import com.ArduiVelo.appArduiVelo
 
@@ -7,10 +9,11 @@ CountersWidgetForm
     property int startTurn: 0;
     property bool bStarted: false;
     property var startTime;
+    property int tpmIndex: 0;
 
     Component.onCompleted:
     {
-        ArduinoVelo.onArduinoInfoChanged.connect(updateValues);
+        //ArduinoVelo.onArduinoInfoChanged.connect(updateValues);
     }
 
     startButton.onClicked:
@@ -37,6 +40,8 @@ CountersWidgetForm
 
         onTriggered:
         {
+            updateValues();
+
             if (!bStarted)
                 return;
 
@@ -51,5 +56,22 @@ CountersWidgetForm
         tpmText.text = ArduinoVelo.arduinoInfo.turnPerMinute;
         turnsText.text = ArduinoVelo.arduinoInfo.numTurns - startTurn;
         hbpmText.text = ArduinoVelo.arduinoInfo.heartBeatPerMinute;
+
+        valueAxisTPM_X.min = Math.max(0, tpmIndex - 40);
+        valueAxisTPM_X.max = Math.max(60, tpmIndex + 20);
+        // find max for last points
+        let maxValue = Math.max(50, ArduinoVelo.arduinoInfo.turnPerMinute);
+        for (let Index = tpmIndex - 40; Index < tpmIndex; ++Index)
+        {
+            maxValue = Math.max(maxValue, splineTPMSeries.at(Index).y);
+        }
+        valueAxisTPM_Y.min = 0;
+        valueAxisTPM_Y.max = (Math.ceil((maxValue / 10) + 0.1) + 1) * 10;
+
+        splineTPMSeries.append(tpmIndex++, ArduinoVelo.arduinoInfo.turnPerMinute);
+        if (tpmIndex > 65)
+        {
+            splineTPMSeries.removePoints(0, 1);
+        }
     }
 }

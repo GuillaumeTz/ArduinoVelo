@@ -5,7 +5,7 @@ project(ArduiVelo VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.2 COMPONENTS Core SerialPort Quick REQUIRED)
+find_package(Qt6 6.2 COMPONENTS Core SerialPort Quick Charts REQUIRED)
 
 qt_add_executable(appArduiVelo
 	QArduinoVelo.h
@@ -29,7 +29,7 @@ set_target_properties(appArduiVelo PROPERTIES
 )
 
 target_link_libraries(appArduiVelo
-	PRIVATE Qt6::Core Qt6::Quick Qt6::SerialPort)
+	PRIVATE Qt6::Core Qt6::Quick Qt6::SerialPort Qt6::Charts)
 
 install(TARGETS appArduiVelo
     BUNDLE DESTINATION .

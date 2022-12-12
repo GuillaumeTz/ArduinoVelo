@@ -10,11 +10,14 @@ QArduinoVelo::QArduinoVelo(QObject *parent) : QObject{parent}
 }
 
 void QArduinoVelo::tryConnect()
-{
+{ 
     if (!SerialPort)
     {
         SerialPort = new QSerialPort(this);
     }
+
+    if (SerialPort->isOpen())
+        return;
 
     bool arduino_available = false;
     QString arduino_portName;
@@ -51,7 +54,7 @@ void QArduinoVelo::tryConnect()
         }
         else
         {
-            bConnected = true;
+            SerialPort->flush();
             QObject::connect(SerialPort, SIGNAL(readyRead()), this, SLOT(readSerial()));
             SerialPort->write("{'status': 'ready'}");
         }
@@ -60,9 +63,15 @@ void QArduinoVelo::tryConnect()
     }
 }
 
+bool QArduinoVelo::isConnected()
+{
+    return SerialPort && SerialPort->isOpen();
+}
+
 void QArduinoVelo::readSerial()
 {
     ReceivedData += SerialPort->readAll();
+    SerialPort->flush();
     qDebug() << "Received : " << ReceivedData;
     const qsizetype indexOfReturn = ReceivedData.indexOf('\r');
     if (indexOfReturn >= 0)
