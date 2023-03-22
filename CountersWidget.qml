@@ -61,11 +61,13 @@ CountersWidgetForm
         valueAxisTPM_X.max = Math.max(60, tpmIndex + 20);
         // find max for last points
         let maxValue = Math.max(50, ArduinoVelo.arduinoInfo.turnPerMinute);
-        for (let Index = tpmIndex - 40; Index < tpmIndex; ++Index)
+        let minValue = Math.min(50, ArduinoVelo.arduinoInfo.turnPerMinute);
+        for (let Index = Math.max(tpmIndex - 10, 0); Index < tpmIndex; ++Index)
         {
             maxValue = Math.max(maxValue, splineTPMSeries.at(Index).y);
+            minValue = Math.min(minValue, splineTPMSeries.at(Index).y);
         }
-        valueAxisTPM_Y.min = 0;
+        valueAxisTPM_Y.min = (Math.ceil((minValue / 10) - 0.1) - 1) * 10;
         valueAxisTPM_Y.max = (Math.ceil((maxValue / 10) + 0.1) + 1) * 10;
 
         splineTPMSeries.append(tpmIndex++, ArduinoVelo.arduinoInfo.turnPerMinute);
